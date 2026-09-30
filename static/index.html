@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillGapAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>SkillGapAI</h1>
+  <p>Paste an internship job description. See which skills you have and what to learn next.</p>
+  <nav role="tablist">
+    <button data-tab="skills" role="tab">1. Your skills</button>
+    <button data-tab="job" role="tab">2. Job description</button>
+    <button data-tab="report" role="tab">3. Gap report</button>
+  </nav>
+</header>
+<main>
+  <section id="skills">
+    <label for="skillsText">Type your skills, in any words</label>
+    <textarea id="skillsText" rows="4" placeholder="Python, JS, made a Flask app, good at teamwork"></textarea>
+    <p class="label">Or tick from the list</p>
+    <div id="checklist"></div>
+    <button class="primary" data-go="job">Next: job description</button>
+  </section>
+  <section id="job" hidden>
+    <label for="jobText">Paste the job description</label>
+    <textarea id="jobText" rows="12" placeholder="Paste the full role and requirements here"></textarea>
+    <p id="error" role="alert"></p>
+    <button class="primary" id="run">Find my gaps</button>
+  </section>
+  <section id="report" hidden>
+    <div id="empty">No report yet. Add your skills and a job description, then choose Find my gaps.</div>
+    <div id="result" hidden>
+      <div class="meter-wrap"><div id="meter" aria-hidden="true"></div><p id="summary"></p></div>
+      <h2>Skills you already have</h2><ul id="matched" class="chips"></ul>
+      <h2>Skills to learn</h2><ul id="missing" class="cards"></ul>
+      <h2>Other skills you listed</h2><ul id="extra" class="chips quiet"></ul>
+      <button class="primary" data-go="job" id="again">Try another job description</button>
+    </div>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
