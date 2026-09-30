@@ -5,13 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SkillGapAI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
-  <h1>SkillGapAI</h1>
-  <p>Paste an internship job description. See which skills you have and what to learn next.</p>
+  <div class="hero">
+    <div>
+      <p class="brand">SkillGapAI</p>
+      <h1>Know exactly what stands between you and the internship.</h1>
+      <p class="sub">Paste a job description. We find the skills it asks for, check them against yours, and show the gap.</p>
+    </div>
+    <div id="vennHero" class="venn"></div>
+  </div>
   <nav role="tablist">
     <button data-tab="skills" role="tab">1. Your skills</button>
     <button data-tab="job" role="tab">2. Job description</button>
@@ -35,7 +42,10 @@
   <section id="report" hidden>
     <div id="empty">No report yet. Add your skills and a job description, then choose Find my gaps.</div>
     <div id="result" hidden>
-      <div class="meter-wrap"><div id="meter" aria-hidden="true"></div><p id="summary"></p></div>
+      <div class="top">
+        <div id="vennBig" class="venn"></div>
+        <div class="stat"><div id="pct">0%</div><p id="summary"></p></div>
+      </div>
       <h2>Skills you already have</h2><ul id="matched" class="chips"></ul>
       <h2>Skills to learn</h2><ul id="missing" class="cards"></ul>
       <h2>Other skills you listed</h2><ul id="extra" class="chips quiet"></ul>

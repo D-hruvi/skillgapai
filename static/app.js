@@ -18,14 +18,47 @@ function list(id, items, render) {
   for (const it of items) { const li = document.createElement("li"); render(li, it); ul.append(li); }
 }
 
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches, R = 110;
+let vid = 0;
+const ease = (p) => 1 - Math.pow(1 - p, 3);
+
+function venn(el, c) {
+  if (!el.firstChild) {
+    const id = "lens" + vid++;
+    el.innerHTML = `<svg viewBox="0 0 480 310" role="img" aria-label="Overlap between your skills and the role"><defs><clipPath id="${id}"><circle class="r" cy="150" r="${R}"/></clipPath></defs>
+<circle class="y" cy="150" r="${R}" fill="#ffb454" fill-opacity=".9"/><circle class="r" cy="150" r="${R}" fill="#5b8cff" fill-opacity=".9"/>
+<circle class="y" cy="150" r="${R}" fill="#43e8b0" clip-path="url(#${id})"/><text x="120" y="300">Your skills</text><text x="360" y="300">The role</text></svg>`;
+  }
+  const from = el._c ?? 0, t0 = performance.now();
+  el._c = c;
+  const step = (now) => {
+    const p = RM ? 1 : Math.min((now - t0) / 1400, 1), d = (2 * R + 16) * (1 - (from + (c - from) * ease(p)));
+    el.querySelectorAll(".y").forEach((n) => n.setAttribute("cx", 240 - d / 2));
+    el.querySelectorAll(".r").forEach((n) => n.setAttribute("cx", 240 + d / 2));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function countUp(n, to) {
+  const t0 = performance.now();
+  const step = (now) => {
+    const p = RM ? 1 : Math.min((now - t0) / 1400, 1);
+    n.textContent = Math.round(to * ease(p)) + "%";
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 function draw(r) {
   $("empty").hidden = !!r;
   $("result").hidden = !r;
   if (!r) return;
-  $("meter").replaceChildren(...[...r.matched.map(() => "y"), ...r.missing.map(() => "n")].map((c) => {
-    const i = document.createElement("i"); i.className = c; return i;
-  }));
-  $("summary").textContent = `You cover ${r.matched.length} of ${r.matched.length + r.missing.length} required skills (${r.coverage}%).`;
+  const total = r.matched.length + r.missing.length;
+  $("vennBig")._c = 0;
+  venn($("vennBig"), r.coverage / 100);
+  countUp($("pct"), r.coverage);
+  $("summary").textContent = `You cover ${r.matched.length} of ${total} required skills. ${r.missing.length} left to learn.`;
   list("matched", r.matched, (li, m) => {
     li.textContent = m.skill;
     if (m.note) { const s = document.createElement("small"); s.textContent = m.note; li.append(s); }
@@ -74,6 +107,7 @@ async function init() {
       }
     }
   } catch { $("checklist").textContent = "Could not load the checklist. You can still type your skills."; }
+  venn($("vennHero"), 0.4);
   draw(state.report); show(state.tab);
 }
 init();
