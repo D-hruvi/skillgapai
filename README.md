@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SkillGapAI
 
 Compares a student's skills with an internship job description using classical NLP (no LLM, no external API).
@@ -22,3 +23,6 @@ Without the spaCy model the app still runs (exact, alias and typo matching); `/a
 Add skills, aliases and suggestions in `data/skills.json`. No code change needed.
 ## API
 `GET /api/skills` · `GET /api/health` · `POST /api/analyze {skills_text, skills_list, job_description}`
+=======
+# skillgapai
+>>>>>>> c2d31a5e3a3bac80b6ce5c9f94716c7a234595a1
