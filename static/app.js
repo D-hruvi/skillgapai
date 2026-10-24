@@ -1,0 +1,134 @@
+const $ = (id) => document.getElementById(id);
+const KEY = "skillgapai-session";
+const state = Object.assign({ tab: "skills", text: "", picked: [], jd: "", report: null, hpw: 10 },
+  JSON.parse(localStorage.getItem(KEY) || "{}"));
+const save = () => localStorage.setItem(KEY, JSON.stringify(state));
+
+function show(tab) {
+  state.tab = tab;
+  for (const s of ["skills", "job", "report"]) $(s).hidden = s !== tab;
+  document.querySelectorAll("nav button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  save();
+}
+
+function list(id, items, render) {
+  const ul = $(id);
+  ul.replaceChildren();
+  if (!items.length) { const li = document.createElement("li"); li.textContent = "None"; ul.append(li); return; }
+  for (const it of items) { const li = document.createElement("li"); render(li, it); ul.append(li); }
+}
+
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches, R = 110;
+let vid = 0;
+const ease = (p) => 1 - Math.pow(1 - p, 3);
+
+function venn(el, c) {
+  if (!el.firstChild) {
+    const id = "lens" + vid++;
+    el.innerHTML = `<svg viewBox="0 0 480 310" role="img" aria-label="Overlap between your skills and the role"><defs><clipPath id="${id}"><circle class="r" cy="150" r="${R}"/></clipPath></defs>
+<circle class="y" cy="150" r="${R}" fill="#ffb454" fill-opacity=".9"/><circle class="r" cy="150" r="${R}" fill="#5b8cff" fill-opacity=".9"/>
+<circle class="y" cy="150" r="${R}" fill="#43e8b0" clip-path="url(#${id})"/><text x="120" y="300">Your skills</text><text x="360" y="300">The role</text></svg>`;
+  }
+  const from = el._c ?? 0, t0 = performance.now();
+  el._c = c;
+  const step = (now) => {
+    const p = RM ? 1 : Math.min((now - t0) / 1400, 1), d = (2 * R + 16) * (1 - (from + (c - from) * ease(p)));
+    el.querySelectorAll(".y").forEach((n) => n.setAttribute("cx", 240 - d / 2));
+    el.querySelectorAll(".r").forEach((n) => n.setAttribute("cx", 240 + d / 2));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function countUp(n, to) {
+  const t0 = performance.now();
+  const step = (now) => {
+    const p = RM ? 1 : Math.min((now - t0) / 1400, 1);
+    n.textContent = Math.round(to * ease(p)) + "%";
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function drawPlan(p) {
+  const ol = $("plan"), el = (t, txt, cls) => { const n = document.createElement(t); n.textContent = txt; if (cls) n.className = cls; return n; };
+  ol.replaceChildren();
+  $("planSummary").textContent = p.steps.length
+    ? `About ${p.total_hours} hours, roughly ${p.total_weeks} weeks at ${p.hours_per_week} hours a week. Skip any step you already know.`
+    : "You cover every required skill. Nothing to learn for this role.";
+  for (const s of p.steps) {
+    const li = document.createElement("li"), body = document.createElement("div"), a = el("a", "Find tutorials");
+    li.className = s.required ? "req" : "found";
+    a.href = "https://www.google.com/search?q=" + encodeURIComponent(`learn ${s.skill} tutorial for beginners`);
+    a.target = "_blank"; a.rel = "noopener";
+    body.append(el("b", `${s.skill} (${s.hours} h)`),
+      el("small", s.required ? "The job asks for this" : `Foundation for ${s.unlocks.join(", ")}`), el("p", s.tip), ...(s.evidence ? [el("small", `From the job: "${s.evidence}"`)] : []), a);
+    li.append(el("span", s.week_start === s.week_end ? `Week ${s.week_start}` : `Weeks ${s.week_start}–${s.week_end}`, "wk"), body);
+    ol.append(li);
+  }
+}
+
+function draw(r) {
+  $("empty").hidden = !!r;
+  $("result").hidden = !r;
+  if (!r) return;
+  const total = r.matched.length + r.missing.length;
+  $("vennBig")._c = 0;
+  venn($("vennBig"), r.coverage / 100);
+  countUp($("pct"), r.coverage);
+  $("summary").textContent = `You cover ${r.matched.length} of ${total} required skills. ${r.missing.length} left to learn.`;
+  list("matched", r.matched, (li, m) => {
+    li.textContent = m.skill;
+    if (m.note) { const s = document.createElement("small"); s.textContent = m.note; li.append(s); }
+  });
+  list("missing", r.missing, (li, m) => (li.textContent = m.skill));
+  $("plan").parentNode.hidden = false;
+  if (r.plan) drawPlan(r.plan);
+  $("possibleBox").hidden = !(r.possible || []).length;
+  list("possible", r.possible || [], (li, m) => (li.textContent = `${m.skill} (from "${m.heard}")`));
+  list("extra", r.extra, (li, m) => (li.textContent = m.skill));
+}
+
+async function run() {
+  const btn = $("run"), err = $("error");
+  err.textContent = "";
+  btn.disabled = true; btn.textContent = "Analysing...";
+  try {
+    const res = await fetch("/api/analyze", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ skills_text: state.text, skills_list: state.picked, job_description: state.jd, hours_per_week: state.hpw }),
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.error || "Something went wrong. Try again."; return; }
+    state.report = data; draw(data); show("report");
+  } catch { err.textContent = "Cannot reach the server. Check your connection and try again."; }
+  finally { btn.disabled = false; btn.textContent = "Find my gaps"; }
+}
+
+async function init() {
+  $("skillsText").value = state.text; $("jobText").value = state.jd;
+  $("skillsText").oninput = (e) => { state.text = e.target.value; save(); };
+  $("jobText").oninput = (e) => { state.jd = e.target.value; save(); };
+  document.querySelectorAll("nav button").forEach((b) => (b.onclick = () => show(b.dataset.tab)));
+  document.querySelectorAll("[data-go]").forEach((b) => (b.onclick = () => show(b.dataset.go)));
+  $("again").onclick = () => { state.jd = ""; $("jobText").value = ""; show("job"); };
+  $("hpw").value = state.hpw;
+  $("hpw").onchange = (e) => { state.hpw = +e.target.value; save(); };
+  $("run").onclick = run;
+  try {
+    const groups = await (await fetch("/api/skills")).json();
+    for (const [cat, names] of Object.entries(groups)) {
+      const h = document.createElement("h3"); h.textContent = cat; $("checklist").append(h);
+      for (const n of names) {
+        const l = document.createElement("label"); l.className = "pick";
+        const c = document.createElement("input"); c.type = "checkbox"; c.checked = state.picked.includes(n);
+        c.onchange = () => { state.picked = c.checked ? [...state.picked, n] : state.picked.filter((x) => x !== n); save(); };
+        const s = document.createElement("span"); s.textContent = n;
+        l.append(c, s); $("checklist").append(l);
+      }
+    }
+  } catch { $("checklist").textContent = "Could not load the checklist. You can still type your skills."; }
+  venn($("vennHero"), 0.4);
+  draw(state.report); show(state.tab);
+}
+init();

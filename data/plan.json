@@ -1,0 +1,261 @@
+{
+ "default_hours": {
+  "Languages": 30,
+  "Databases": 15,
+  "Web": 20,
+  "Design": 15,
+  "Data & AI": 25,
+  "Core CS": 40,
+  "Tools": 10,
+  "Cloud": 15,
+  "Practices": 8,
+  "Soft skills": 10,
+  "Networking": 25,
+  "Domain": 10,
+  "Security": 25,
+  "DevOps": 15,
+  "Data Engineering": 25,
+  "Mobile": 30,
+  "Embedded & Hardware": 35,
+  "Game & Graphics": 35,
+  "QA": 12,
+  "Product & Business": 15,
+  "Emerging": 25,
+  "Detected in the job": 20
+ },
+ "hours": {
+  "Python": 30,
+  "JavaScript": 35,
+  "HTML": 8,
+  "CSS": 12,
+  "SQL": 15,
+  "Git": 8,
+  "Docker": 12,
+  "Excel": 12,
+  "Statistics": 30,
+  "Data Structures": 60,
+  "Machine Learning": 50,
+  "Deep Learning": 40,
+  "NLP": 30,
+  "Pandas": 15,
+  "NumPy": 8,
+  "React": 30,
+  "Teamwork": 6,
+  "Communication": 8,
+  "Testing": 10,
+  "Networking": 40,
+  "Cisco": 30,
+  "TOGAF": 40,
+  "BGP": 15,
+  "OSPF": 12
+ },
+ "requires": {
+  "React": [
+   "JavaScript",
+   "HTML",
+   "CSS"
+  ],
+  "Node.js": [
+   "JavaScript"
+  ],
+  "TypeScript": [
+   "JavaScript"
+  ],
+  "Flask": [
+   "Python"
+  ],
+  "Django": [
+   "Python"
+  ],
+  "FastAPI": [
+   "Python"
+  ],
+  "Pandas": [
+   "Python"
+  ],
+  "NumPy": [
+   "Python"
+  ],
+  "scikit-learn": [
+   "Python",
+   "Pandas"
+  ],
+  "Machine Learning": [
+   "Python",
+   "Statistics"
+  ],
+  "Deep Learning": [
+   "Machine Learning"
+  ],
+  "NLP": [
+   "Machine Learning"
+  ],
+  "Computer Vision": [
+   "Deep Learning"
+  ],
+  "TensorFlow": [
+   "Deep Learning"
+  ],
+  "PyTorch": [
+   "Deep Learning"
+  ],
+  "Data Visualization": [
+   "Python"
+  ],
+  "Docker": [
+   "Linux"
+  ],
+  "Kubernetes": [
+   "Docker"
+  ],
+  "CI/CD": [
+   "Git"
+  ],
+  "MySQL": [
+   "SQL"
+  ],
+  "PostgreSQL": [
+   "SQL"
+  ],
+  "AWS": [
+   "Linux"
+  ],
+  "Routing and Switching": [
+   "Networking"
+  ],
+  "BGP": [
+   "Routing and Switching"
+  ],
+  "OSPF": [
+   "Routing and Switching"
+  ],
+  "SD-WAN": [
+   "Routing and Switching"
+  ],
+  "Cisco ACI": [
+   "Cisco",
+   "Data Center Networking"
+  ],
+  "Cisco SDA": [
+   "Cisco"
+  ],
+  "Cisco ISE": [
+   "Cisco",
+   "Network Security"
+  ],
+  "Data Center Networking": [
+   "Networking"
+  ],
+  "Layer 2/3 Networking": [
+   "Networking"
+  ],
+  "Load Balancing": [
+   "Networking"
+  ],
+  "High Availability": [
+   "Networking"
+  ],
+  "Network Security": [
+   "Networking"
+  ],
+  "Cloud Networking": [
+   "Networking"
+  ],
+  "Penetration Testing": [
+   "Networking",
+   "Linux"
+  ],
+  "SIEM": [
+   "Networking"
+  ],
+  "Incident Response": [
+   "Cybersecurity"
+  ],
+  "Apache Spark": [
+   "SQL"
+  ],
+  "Airflow": [
+   "Python"
+  ],
+  "dbt": [
+   "SQL"
+  ],
+  "ETL": [
+   "SQL"
+  ],
+  "Data Warehousing": [
+   "SQL"
+  ],
+  "Generative AI": [
+   "Machine Learning"
+  ],
+  "RAG": [
+   "Generative AI"
+  ],
+  "MLOps": [
+   "Machine Learning",
+   "Docker"
+  ],
+  "Android": [
+   "Kotlin"
+  ],
+  "iOS": [
+   "Swift"
+  ],
+  "Angular": [
+   "TypeScript"
+  ],
+  "Vue.js": [
+   "JavaScript"
+  ],
+  "Next.js": [
+   "React"
+  ],
+  "Spring Boot": [
+   "Java"
+  ],
+  "Laravel": [
+   "PHP"
+  ],
+  "Ruby on Rails": [
+   "Ruby"
+  ],
+  "RTOS": [
+   "Embedded Systems"
+  ],
+  "Embedded Systems": [
+   "C++"
+  ],
+  "Microservices": [
+   "REST APIs",
+   "Docker"
+  ],
+  "Selenium": [
+   "Testing"
+  ],
+  "Terraform": [
+   "Linux"
+  ]
+ },
+ "default_tip": "Take a beginner course in {skill}, then build one small project that uses it and put it on GitHub.",
+ "category_tips": {
+  "Security": "Practise {skill} on free labs (TryHackMe or Hack The Box) and write up what you did.",
+  "DevOps": "Learn {skill} by automating the deployment of one of your own projects end to end.",
+  "Data Engineering": "Build a small pipeline that uses {skill}: load a public dataset, transform it, store the result.",
+  "Mobile": "Follow the official {skill} tutorial and ship a small app to an emulator.",
+  "Embedded & Hardware": "Get a low-cost board or simulator and build one small project using {skill}.",
+  "Game & Graphics": "Follow a beginner {skill} tutorial and finish a tiny playable or visual demo.",
+  "QA": "Write a small {skill} suite against a public demo site and report what it found.",
+  "Product & Business": "Learn {skill} from a short certification-style course and apply it to a mock project.",
+  "Emerging": "Do a beginner {skill} workshop and build one small demo.",
+  "Networking": "Practise {skill} in a free lab (Packet Tracer or GNS3) and document your setup.",
+  "Web": "Follow the official {skill} tutorial and build one small working app.",
+  "Data & AI": "Take a short {skill} course and apply it to one public dataset.",
+  "Databases": "Install {skill} locally, load sample data, and practise the common queries.",
+  "Cloud": "Try {skill} on a free tier and deploy one small app.",
+  "Languages": "Solve 20 beginner problems in {skill}, then build one small program.",
+  "Tools": "Use {skill} in one of your own projects for a week.",
+  "Core CS": "Study {skill} from a standard course and solve practice problems.",
+  "Detected in the job": "Search for a beginner course in {skill}, then build one small project that uses it."
+ }
+}
